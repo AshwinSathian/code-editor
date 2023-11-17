@@ -1,11 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { MenubarModule } from 'primeng/menubar';
 import { Subject, distinct, filter, takeUntil } from 'rxjs';
-import { LanguageService } from '../../services/language.service';
 import * as ts from 'typescript';
 import { Languages } from '../../enums/languages.enum';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-output',
@@ -13,6 +19,7 @@ import { Languages } from '../../enums/languages.enum';
   imports: [CommonModule, ButtonModule, MenubarModule],
   templateUrl: './output.component.html',
   styleUrl: './output.component.css',
+  encapsulation: ViewEncapsulation.None,
 })
 export class OutputComponent implements OnInit, OnDestroy {
   @Input() code?: string;
@@ -70,7 +77,7 @@ export class OutputComponent implements OnInit, OnDestroy {
     this.errorOccured = false;
     let code = this.code;
 
-    if (this.selectedLanguage === 'typescript') {
+    if (this.selectedLanguage === Languages.typescript) {
       code = ts.transpile(code as string);
     }
 

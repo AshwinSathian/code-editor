@@ -2,7 +2,6 @@
   <p-menubar [model]="editorMenuItems">
     <ng-template pTemplate="start"
       ><div class="w-full flex align-items-center gap-2 p-2">
-        <!-- <i class="pi pi-file" style="font-size: 2rem"></i> -->
         <img
           [src]="'assets/' + selectedLanguage.extension + '.png'"
           height="40"
@@ -15,16 +14,21 @@
           [(ngModel)]="fileName"
         />
         <span *ngIf="!editingFileName">{{ fileName }}</span>
-        <i
-          *ngIf="!editingFileName"
-          class="pi pi-pencil cursor-pointer"
-          (click)="editingFileName = !editingFileName"
-        ></i>
-        <i
-          *ngIf="editingFileName"
-          class="pi pi-times cursor-pointer text-red-500"
-          (click)="editingFileName = !editingFileName"
-        ></i></div
+        <ng-container *ngIf="loading"
+          ><i *ngIf="!editingFileName" class="pi pi-spin"></i
+        ></ng-container>
+        <ng-container *ngIf="!loading"
+          ><i
+            *ngIf="!editingFileName"
+            class="pi pi-pencil cursor-pointer"
+            (click)="editingFileName = !editingFileName"
+          ></i>
+          <i
+            *ngIf="editingFileName"
+            class="pi pi-times cursor-pointer text-red-500"
+            (click)="editingFileName = !editingFileName"
+          ></i
+        ></ng-container></div
     ></ng-template>
     <ng-template pTemplate="end">
       <p-dropdown
@@ -46,19 +50,21 @@
             <div>{{ language.label }}</div>
           </div>
         </ng-template>
-        <!-- <ng-template let-language>
-          <div class="flex align-items-center gap-1">
-            <img [src]="language.icon" height="20" />
-            <div>{{ language.label }}</div>
-          </div>
-        </ng-template> -->
-      </p-dropdown></ng-template
-    >
+      </p-dropdown>
+    </ng-template>
   </p-menubar>
   <ngx-monaco-editor
     [options]="editorOptions"
     [(ngModel)]="code"
     style="height: 100%"
-    (ngModelChange)="codeChange.emit($event)"
+    (ngModelChange)="codeChanged($event)"
   ></ngx-monaco-editor>
 </div>
+
+<input
+  #fileInput
+  type="file"
+  [accept]="'.' + selectedLanguage.extension"
+  (change)="onFileSelected($event)"
+  hidden
+/>

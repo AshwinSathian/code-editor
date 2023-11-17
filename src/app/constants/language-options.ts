@@ -1,9 +1,11 @@
-export const languageOptions = [
+import { Languages } from '../enums/languages.enum';
+
+export const LANGUAGE_OPTIONS = [
   {
     label: 'HTML',
     value: {
       label: 'HTML',
-      code: 'html',
+      code: Languages.html,
       extension: 'html',
       mimeType: 'text/html',
       starter: '<h1>Hello, World!</h1>',
@@ -14,7 +16,7 @@ export const languageOptions = [
     label: 'Javascript',
     value: {
       label: 'Javascript',
-      code: 'javascript',
+      code: Languages.javascript,
       extension: 'js',
       mimeType: 'text/javascript',
       starter: "console.log('Hello, World!')",
@@ -25,7 +27,7 @@ export const languageOptions = [
     label: 'Typescript',
     value: {
       label: 'Typescript',
-      code: 'typescript',
+      code: Languages.typescript,
       extension: 'ts',
       mimeType: 'text/typescript',
       starter: "console.log('Hello, World!')",
