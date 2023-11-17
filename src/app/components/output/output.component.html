@@ -1,0 +1,30 @@
+<div class="h-screen flex flex-column gap-2">
+  <p-menubar
+    *ngIf="
+      selectedLanguage === Languages.javascript ||
+      selectedLanguage === Languages.typescript
+    "
+  >
+    <ng-template pTemplate="end">
+      <p-button
+        label="Run Code"
+        severity="success"
+        [loading]="loading"
+        (click)="runCode()"
+      ></p-button>
+    </ng-template>
+  </p-menubar>
+  <ng-container [ngSwitch]="selectedLanguage">
+    <div *ngSwitchCase="Languages.html" [innerHTML]="code"></div>
+    <div *ngSwitchCase="Languages.javascript" class="console">
+      <span *ngIf="output" [ngClass]="{ 'text-red-500': errorOccured }">{{
+        output
+      }}</span>
+    </div>
+    <div *ngSwitchCase="Languages.typescript" class="console">
+      <span *ngIf="output" [ngClass]="{ 'text-red-500': errorOccured }">{{
+        output
+      }}</span>
+    </div>
+  </ng-container>
+</div>

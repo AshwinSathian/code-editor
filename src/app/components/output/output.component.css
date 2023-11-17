@@ -1,0 +1,6 @@
+.console {
+  background-color: rgba(0, 0, 0, 0.75);
+  font-family: monospace;
+  font-size: 12px;
+  padding: 1rem;
+}

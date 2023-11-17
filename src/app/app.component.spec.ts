@@ -14,16 +14,18 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'html-editor' title`, () => {
+  it(`should have the 'code-editor' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('html-editor');
+    expect(app.title).toEqual('code-editor');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, html-editor');
+    expect(compiled.querySelector('h1')?.textContent).toContain(
+      'Hello, code-editor'
+    );
   });
 });
