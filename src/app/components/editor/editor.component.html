@@ -7,29 +7,25 @@
           height="40"
           class="mr-2"
         />
-        <input
-          *ngIf="editingFileName"
-          type="text"
-          pInputText
-          [(ngModel)]="fileName"
-        />
-        <span *ngIf="!editingFileName">{{ fileName }}</span>
-        <ng-container *ngIf="loading"
-          ><i *ngIf="!editingFileName" class="pi pi-spin"></i
-        ></ng-container>
-        <ng-container *ngIf="!loading"
-          ><i
-            *ngIf="!editingFileName"
-            class="pi pi-pencil cursor-pointer"
-            (click)="editingFileName = !editingFileName"
-          ></i>
-          <i
-            *ngIf="editingFileName"
-            class="pi pi-times cursor-pointer text-red-500"
-            (click)="editingFileName = !editingFileName"
-          ></i
-        ></ng-container></div
-    ></ng-template>
+        @if (editingFileName) {
+        <input type="text" pInputText [(ngModel)]="fileName" />
+        } @if (!editingFileName) {
+        <span>{{ fileName }}</span>
+        } @if (loading) { @if (!editingFileName) {
+        <i class="pi pi-spin"></i>
+        } } @if (!loading) { @if (!editingFileName) {
+        <i
+          class="pi pi-pencil cursor-pointer"
+          (click)="editingFileName = !editingFileName"
+        ></i>
+        } @if (editingFileName) {
+        <i
+          class="pi pi-times cursor-pointer text-red-500"
+          (click)="editingFileName = !editingFileName"
+        ></i>
+        } }
+      </div></ng-template
+    >
     <ng-template pTemplate="end">
       <p-dropdown
         [options]="languageOptions"

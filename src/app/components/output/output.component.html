@@ -1,46 +1,37 @@
 <div class="h-screen flex flex-column gap-2">
-  <p-menubar
-    *ngIf="
-      selectedLanguage === Languages.javascript ||
-      selectedLanguage === Languages.typescript ||
-      selectedLanguage === Languages.json
-    "
-  >
+  @if ( selectedLanguage === Languages.javascript || selectedLanguage ===
+  Languages.typescript || selectedLanguage === Languages.json ) {
+  <p-menubar>
     <ng-template pTemplate="end">
+      @if ( selectedLanguage === Languages.javascript || selectedLanguage ===
+      Languages.typescript ) {
       <p-button
-        *ngIf="
-          selectedLanguage === Languages.javascript ||
-          selectedLanguage === Languages.typescript
-        "
         label="Run Code"
         severity="success"
         [loading]="loading"
         (click)="runCode()"
       ></p-button>
+      } @if (selectedLanguage === Languages.json) {
       <p-button
-        *ngIf="selectedLanguage === Languages.json"
         label="Prettify"
         severity="success"
         [loading]="loading"
         (click)="prettyPrintJSON()"
       ></p-button>
+      }
     </ng-template>
   </p-menubar>
-
-  <ng-container *ngIf="output">
-    <div *ngIf="selectedLanguage === Languages.html" [innerHTML]="code"></div>
-    <div *ngIf="selectedLanguage !== Languages.html" class="console">
-      <div
-        *ngIf="selectedLanguage !== Languages.json"
-        [ngClass]="{ 'text-red-500': errorOccured }"
-      >
-        {{ output }}
-      </div>
-      <pre
-        *ngIf="selectedLanguage === Languages.json"
-        [ngClass]="{ 'text-red-500': errorOccured }"
-        >{{ output }}</pre
-      >
+  } @if (output) { @if (selectedLanguage === Languages.html) {
+  <div [innerHTML]="code"></div>
+  } @if (selectedLanguage !== Languages.html) {
+  <div class="console">
+    @if (selectedLanguage !== Languages.json) {
+    <div [ngClass]="{ 'text-red-500': errorOccured }">
+      {{ output }}
     </div>
-  </ng-container>
+    } @if (selectedLanguage === Languages.json) {
+    <pre [ngClass]="{ 'text-red-500': errorOccured }">{{ output }}</pre>
+    }
+  </div>
+  } }
 </div>

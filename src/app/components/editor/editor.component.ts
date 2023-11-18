@@ -33,8 +33,8 @@ import { Subject, distinct, filter, takeUntil } from 'rxjs';
     MenubarModule,
     InputTextModule,
     ButtonModule,
-    DropdownModule,
-  ],
+    DropdownModule
+],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css',
 })
