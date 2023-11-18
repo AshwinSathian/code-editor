@@ -117,7 +117,11 @@ export class EditorComponent implements OnInit {
   codeChanged(code: any) {
     if (this.selectedLanguage.code === Languages.html) {
       code = this._sanitizer.bypassSecurityTrustHtml(code);
-    } else {
+    } else if (
+      [Languages.javascript, Languages.typescript].includes(
+        this.selectedLanguage.code as Languages
+      )
+    ) {
       code = this._sanitizer.bypassSecurityTrustScript(code);
     }
     this.codeChange.emit(code);

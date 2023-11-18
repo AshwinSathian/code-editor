@@ -45,6 +45,8 @@ export class OutputComponent implements OnInit, OnDestroy {
       .subscribe((language) => {
         if (language) {
           this.selectedLanguage = language;
+          this.output =
+            this.selectedLanguage === Languages.html ? this.code || '' : '';
         }
       });
 
@@ -82,6 +84,17 @@ export class OutputComponent implements OnInit, OnDestroy {
     }
 
     this.worker?.postMessage({ code: code });
+  }
+
+  prettyPrintJSON() {
+    this.errorOccured = false;
+    try {
+      const parsedJson = JSON.parse(this.code as string);
+      this.output = JSON.stringify(parsedJson, null, 2);
+    } catch (e) {
+      this.errorOccured = true;
+      this.output = 'Invalid JSON';
+    }
   }
 
   ngOnDestroy(): void {

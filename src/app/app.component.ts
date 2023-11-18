@@ -16,7 +16,6 @@ export class AppComponent {
   selectedLanguage = 'html';
 
   setLanguage(language: any) {
-    console.log(1, language);
-    this.selectedLanguage = language as string;
+    this.selectedLanguage = language;
   }
 }

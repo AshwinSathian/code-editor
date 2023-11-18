@@ -5,4 +5,5 @@ export interface Language {
   mimeType: string;
   starter: string;
   icon: string;
+  actions?: string[];
 }
