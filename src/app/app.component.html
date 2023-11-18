@@ -1,12 +1,9 @@
 <div class="grid w-full">
   <div class="col">
-    <app-editor
-      [(code)]="code"
-      (languageEmitter)="setLanguage($event)"
-    ></app-editor>
+    <app-editor></app-editor>
   </div>
   <div class="col">
-    <app-output [code]="code"></app-output>
+    <app-output></app-output>
   </div>
 
   <!-- <div class="col" [innerHTML]="code"></div> -->

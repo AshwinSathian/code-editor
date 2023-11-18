@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild,
@@ -19,7 +20,8 @@ import { EDITOR_OPTIONS } from '../../constants/editor-options';
 import { LANGUAGE_OPTIONS } from '../../constants/language-options';
 import { Languages } from '../../enums/languages.enum';
 import { Language } from '../../interfaces/language';
-import { LanguageService } from '../../services/language.service';
+import { CodeEditorService } from '../../services/code-editor.service';
+import { Subject, distinct, filter, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-editor',
@@ -36,10 +38,9 @@ import { LanguageService } from '../../services/language.service';
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css',
 })
-export class EditorComponent implements OnInit {
+export class EditorComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
   @Input() code?: string;
-  @Output() codeChange = new EventEmitter<string>();
 
   private worker?: Worker;
   fileName = 'Untitled';
@@ -81,14 +82,41 @@ export class EditorComponent implements OnInit {
   }[] = LANGUAGE_OPTIONS;
   selectedLanguage: Language = LANGUAGE_OPTIONS[0].value;
   loading = false;
-  languageEmitter = new EventEmitter<string>();
+
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
-    private service: LanguageService,
+    private service: CodeEditorService,
     private _sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
+    this.service.selectedLanguage$
+      .pipe(
+        filter((l) => !!l),
+        distinct(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((language) => {
+        if (language) {
+          this.selectedLanguage =
+            LANGUAGE_OPTIONS?.find((l) => l.value.code === language)?.value ||
+            LANGUAGE_OPTIONS[0].value;
+        }
+      });
+
+    this.service.code$
+      .pipe(
+        filter((l) => !!l),
+        distinct(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((code) => {
+        if (code) {
+          this.code = code;
+        }
+      });
+
     if (typeof Worker !== 'undefined') {
       this.worker = new Worker(
         new URL('./file-reader.worker', import.meta.url),
@@ -100,7 +128,7 @@ export class EditorComponent implements OnInit {
         if (data?.success) {
           if (data.code) {
             this.code = data.code;
-            this.codeChange.emit(this.selectedLanguage.starter);
+            this.service.setCode(this.selectedLanguage.starter);
             this.fileName = this.uploadFileName;
           }
         } else {
@@ -117,14 +145,9 @@ export class EditorComponent implements OnInit {
   codeChanged(code: any) {
     if (this.selectedLanguage.code === Languages.html) {
       code = this._sanitizer.bypassSecurityTrustHtml(code);
-    } else if (
-      [Languages.javascript, Languages.typescript].includes(
-        this.selectedLanguage.code as Languages
-      )
-    ) {
-      code = this._sanitizer.bypassSecurityTrustScript(code);
     }
-    this.codeChange.emit(code);
+
+    this.service.setCode(code);
   }
 
   toggleTheme() {
@@ -140,8 +163,8 @@ export class EditorComponent implements OnInit {
       ...this.editorOptions,
       language: this.selectedLanguage.code,
     };
-    this.codeChange.emit(this.selectedLanguage.starter);
     this.service.setLanguage(this.selectedLanguage.code);
+    this.service.setCode(this.selectedLanguage.starter);
   }
 
   download() {
@@ -173,5 +196,10 @@ export class EditorComponent implements OnInit {
       this.uploadFileName = fileNameSections?.join('.');
     }
     this.worker?.postMessage(file);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

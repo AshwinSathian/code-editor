@@ -8,10 +8,10 @@ import {
 } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { MenubarModule } from 'primeng/menubar';
-import { Subject, distinct, filter, takeUntil } from 'rxjs';
+import { Subject, combineLatest, distinct, filter, takeUntil } from 'rxjs';
 import * as ts from 'typescript';
 import { Languages } from '../../enums/languages.enum';
-import { LanguageService } from '../../services/language.service';
+import { CodeEditorService } from '../../services/code-editor.service';
 
 @Component({
   selector: 'app-output',
@@ -33,21 +33,20 @@ export class OutputComponent implements OnInit, OnDestroy {
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private service: LanguageService) {}
+  constructor(private service: CodeEditorService) {}
 
   ngOnInit(): void {
-    this.service.selectedLanguage$
+    combineLatest([this.service.selectedLanguage$, this.service.code$])
       .pipe(
         filter((l) => !!l),
         distinct(),
         takeUntil(this.destroy$)
       )
-      .subscribe((language) => {
-        if (language) {
-          this.selectedLanguage = language;
-          this.output =
-            this.selectedLanguage === Languages.html ? this.code || '' : '';
-        }
+      .subscribe(([language, code]) => {
+        this.selectedLanguage = language;
+        this.code = code;
+        this.output =
+          this.selectedLanguage === Languages.html ? this.code || '' : '';
       });
 
     if (typeof Worker !== 'undefined') {
@@ -75,7 +74,7 @@ export class OutputComponent implements OnInit, OnDestroy {
 
   runCode() {
     this.loading = true;
-    this.output = '';
+
     this.errorOccured = false;
     let code = this.code;
 
@@ -83,7 +82,7 @@ export class OutputComponent implements OnInit, OnDestroy {
       code = ts.transpile(code as string);
     }
 
-    this.worker?.postMessage({ code: code });
+    this.worker?.postMessage({ code });
   }
 
   prettyPrintJSON() {

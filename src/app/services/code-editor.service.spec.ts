@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LanguageService } from './language.service';
+import { CodeEditorService } from './code-editor.service';
 
-describe('LanguageService', () => {
-  let service: LanguageService;
+describe('CodeEditorService', () => {
+  let service: CodeEditorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(LanguageService);
+    service = TestBed.inject(CodeEditorService);
   });
 
   it('should be created', () => {

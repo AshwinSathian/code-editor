@@ -11,11 +11,4 @@ import { OutputComponent } from './components/output/output.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
-  code = '<h1>Hello, World!</h1>';
-  selectedLanguage = 'html';
-
-  setLanguage(language: any) {
-    this.selectedLanguage = language;
-  }
-}
+export class AppComponent {}
