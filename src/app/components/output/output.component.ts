@@ -1,13 +1,7 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
-import { ButtonModule } from 'primeng/button';
-import { MenubarModule } from 'primeng/menubar';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { Subject, combineLatest, distinct, filter, takeUntil } from 'rxjs';
 import * as ts from 'typescript';
 import { Languages } from '../../enums/languages.enum';
@@ -16,15 +10,14 @@ import { CodeEditorService } from '../../services/code-editor.service';
 @Component({
   selector: 'app-output',
   standalone: true,
-  imports: [CommonModule, ButtonModule, MenubarModule],
+  imports: [CommonModule, MatButtonModule, MatToolbarModule],
   templateUrl: './output.component.html',
   styleUrl: './output.component.css',
   encapsulation: ViewEncapsulation.None,
 })
 export class OutputComponent implements OnInit, OnDestroy {
-  @Input() code?: string;
-
   private worker?: Worker;
+  code?: string;
   selectedLanguage?: string;
   output = '';
   errorOccured = false;

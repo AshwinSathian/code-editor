@@ -2,26 +2,26 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
-  Output,
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
-import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputTextModule } from 'primeng/inputtext';
-import { MenubarModule } from 'primeng/menubar';
+import { Subject, distinct, filter, takeUntil } from 'rxjs';
 import { EDITOR_OPTIONS } from '../../constants/editor-options';
 import { LANGUAGE_OPTIONS } from '../../constants/language-options';
 import { Languages } from '../../enums/languages.enum';
 import { Language } from '../../interfaces/language';
 import { CodeEditorService } from '../../services/code-editor.service';
-import { Subject, distinct, filter, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-editor',
@@ -30,19 +30,20 @@ import { Subject, distinct, filter, takeUntil } from 'rxjs';
     CommonModule,
     FormsModule,
     MonacoEditorModule,
-    MenubarModule,
-    InputTextModule,
-    ButtonModule,
-    DropdownModule
-],
+    MatButtonModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
+  ],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css',
 })
 export class EditorComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
-  @Input() code?: string;
 
-  private worker?: Worker;
+  code?: string;
   fileName = 'Untitled';
   uploadFileName = '';
   editingFileName = false;
@@ -76,12 +77,10 @@ export class EditorComponent implements OnInit, OnDestroy {
       ],
     },
   ];
-  languageOptions: {
-    label: string;
-    value: Language;
-  }[] = LANGUAGE_OPTIONS;
-  selectedLanguage: Language = LANGUAGE_OPTIONS[0].value;
+  languageOptions: Language[] = LANGUAGE_OPTIONS;
+  selectedLanguage: Language = LANGUAGE_OPTIONS[0];
   loading = false;
+  private worker?: Worker;
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -100,8 +99,8 @@ export class EditorComponent implements OnInit, OnDestroy {
       .subscribe((language) => {
         if (language) {
           this.selectedLanguage =
-            LANGUAGE_OPTIONS?.find((l) => l.value.code === language)?.value ||
-            LANGUAGE_OPTIONS[0].value;
+            LANGUAGE_OPTIONS?.find((l) => l.code === language) ||
+            LANGUAGE_OPTIONS[0];
         }
       });
 
