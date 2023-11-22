@@ -1,63 +1,54 @@
-<div class="h-screen flex flex-col gap-2">
-  <mat-toolbar>
-    <div class="w-full flex items-center justify-between px-2 py-4">
-      <div class="flex items-center gap-2">
-        <div class="h-10">
-          <img
-            [src]="'assets/' + selectedLanguage.extension + '.png'"
-            height="40"
-            class="h-full w-auto"
-          />
-        </div>
-
+<div class="h-screen flex flex-column gap-2">
+  <p-menubar [model]="editorMenuItems">
+    <ng-template pTemplate="start"
+      ><div class="w-full flex align-items-center gap-2 p-2">
+        <img
+          [src]="'assets/' + selectedLanguage.extension + '.png'"
+          height="40"
+          class="mr-2"
+        />
         @if (editingFileName) {
-        <mat-form-field appearance="outline">
-          <input matInput type="text" [(ngModel)]="fileName" />
-          <button
-            matSuffix
-            mat-icon-button
-            aria-label="Clear"
-            (click)="editingFileName = false"
-          >
-            <mat-icon>close</mat-icon>
-          </button>
-        </mat-form-field>
-        } @else {
-        <div>{{ fileName }}</div>
-        <button
-          mat-icon-button
-          aria-label="Change file name button with a pencil icon"
+        <input type="text" pInputText [(ngModel)]="fileName" />
+        } @if (!editingFileName) {
+        <span>{{ fileName }}</span>
+        } @if (loading) { @if (!editingFileName) {
+        <i class="pi pi-spin"></i>
+        } } @if (!loading) { @if (!editingFileName) {
+        <i
+          class="pi pi-pencil cursor-pointer"
           (click)="editingFileName = !editingFileName"
-        >
-          <mat-icon>edit</mat-icon>
-        </button>
-        }
-      </div>
-      <div class="flex items-center p-2">
-        <mat-form-field appearance="outline">
-          <mat-select
-            [(ngModel)]="selectedLanguage"
-            (ngModelChange)="toggleLanguage()"
-          >
-            @for (language of languageOptions; track language.code) {
-            <mat-option [value]="language">
-              <div class="flex items-center gap-3">
-                <div class="h-5">
-                  <img
-                    [src]="'assets/' + language.extension + '.png'"
-                    height="40"
-                    class="h-full w-auto"
-                  />
-                </div>
-                <div>{{ language.label }}</div>
-              </div>
-            </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-  </mat-toolbar>
+        ></i>
+        } @if (editingFileName) {
+        <i
+          class="pi pi-times cursor-pointer text-red-500"
+          (click)="editingFileName = !editingFileName"
+        ></i>
+        } }
+      </div></ng-template
+    >
+    <ng-template pTemplate="end">
+      <p-dropdown
+        [options]="languageOptions"
+        [(ngModel)]="selectedLanguage"
+        placeholder="Select a Language"
+        appendTo="body"
+        (ngModelChange)="toggleLanguage()"
+      >
+        <ng-template pTemplate="selectedItem">
+          <div class="flex align-items-center gap-1">
+            <img [src]="selectedLanguage.icon" height="20" />
+            <div>{{ selectedLanguage.label }}</div>
+          </div>
+        </ng-template>
+        <ng-template let-language pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <img [src]="language.value.icon" height="20" />
+            <div>{{ language.label }}</div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </ng-template>
+  </p-menubar>
   <ngx-monaco-editor
     [options]="editorOptions"
     [(ngModel)]="code"

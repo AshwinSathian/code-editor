@@ -1,14 +1,10 @@
-<div class="w-full">
-  <mat-toolbar color="primary">
-    <span>Code Editor</span>
-  </mat-toolbar>
-</div>
-
-<div class="grid grid-cols-2 w-full">
-  <div>
+<div class="grid w-full">
+  <div class="col">
     <app-editor></app-editor>
   </div>
-  <div>
+  <div class="col">
     <app-output></app-output>
   </div>
+
+  <!-- <div class="col" [innerHTML]="code"></div> -->
 </div>

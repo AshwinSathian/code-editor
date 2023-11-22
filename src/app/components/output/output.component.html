@@ -1,19 +1,27 @@
-<div class="h-screen flex flex-col gap-2">
-  <mat-toolbar>
-    <div class="w-full flex items-center justify-end px-2 py-4">
-      @if
-      (selectedLanguage===Languages.javascript||selectedLanguage===Languages.typescript)
-      {
-      <button mat-button color="accent" (click)="runCode()">Run Code</button>
-      } @if (selectedLanguage===Languages.json) {
-      <button mat-button color="accent" (click)="prettyPrintJSON()">
-        Prettify JSON
-      </button>
+<div class="h-screen flex flex-column gap-2">
+  @if ( selectedLanguage === Languages.javascript || selectedLanguage ===
+  Languages.typescript || selectedLanguage === Languages.json ) {
+  <p-menubar>
+    <ng-template pTemplate="end">
+      @if ( selectedLanguage === Languages.javascript || selectedLanguage ===
+      Languages.typescript ) {
+      <p-button
+        label="Run Code"
+        severity="success"
+        [loading]="loading"
+        (click)="runCode()"
+      ></p-button>
+      } @if (selectedLanguage === Languages.json) {
+      <p-button
+        label="Prettify"
+        severity="success"
+        [loading]="loading"
+        (click)="prettyPrintJSON()"
+      ></p-button>
       }
-    </div>
-  </mat-toolbar>
-
-  @if (output) { @if (selectedLanguage === Languages.html) {
+    </ng-template>
+  </p-menubar>
+  } @if (output) { @if (selectedLanguage === Languages.html) {
   <div [innerHTML]="code"></div>
   } @if (selectedLanguage !== Languages.html) {
   <div class="console">

@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
-import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -10,6 +10,5 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     importProvidersFrom(MonacoEditorModule.forRoot()),
     importProvidersFrom(BrowserAnimationsModule),
-    provideAnimations()
-],
+  ],
 };
